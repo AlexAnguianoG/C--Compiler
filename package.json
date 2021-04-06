@@ -1,0 +1,19 @@
+{
+  "name": "compiler",
+  "version": "1.0.0",
+  "description": "Compiler software",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexAnguianoG/C---Compiler.git"
+  },
+  "author": "AlexAnguianoG",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexAnguianoG/C---Compiler/issues"
+  },
+  "homepage": "https://github.com/AlexAnguianoG/C---Compiler#readme"
+}
