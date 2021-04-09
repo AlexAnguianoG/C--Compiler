@@ -1,0 +1,2 @@
+if else int while input output void return
++ - * / < > <= >= == != = ;

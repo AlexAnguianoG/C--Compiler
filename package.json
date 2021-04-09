@@ -2,18 +2,22 @@
   "name": "compiler",
   "version": "1.0.0",
   "description": "Compiler software",
-  "main": "app.js",
+  "main": "lex.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "nodemon": "nodemon lex.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AlexAnguianoG/C---Compiler.git"
+    "url": "git+https://github.com/AlexAnguianoG/C--Compiler.git"
   },
   "author": "AlexAnguianoG",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AlexAnguianoG/C---Compiler/issues"
+    "url": "https://github.com/AlexAnguianoG/C--Compiler/issues"
   },
-  "homepage": "https://github.com/AlexAnguianoG/C---Compiler#readme"
+  "homepage": "https://github.com/AlexAnguianoG/C--Compiler#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
 }
