@@ -203,7 +203,7 @@ function* scanner(input) {
   //Variables para el control del programa
   // Variable para identificación del token
   let entryId = 0;
-  // Iterador de la cadena de carácteres (código)
+  // Iterador de la cadena de caracteres  (código)
   let i = 0;
   // Carácter en curso de la cadena de caracteres
   let c = input[i];
@@ -238,7 +238,7 @@ function* scanner(input) {
     col = 1;
   }
 
-  // Función para comprobar si la cadena de carácteres recibido es un námero entero
+  // Función para comprobar si la cadena de caracteres  recibido es un námero entero
   function isNumeric(char) {
     return Number.isInteger(parseInt(char));
   }
@@ -248,13 +248,13 @@ function* scanner(input) {
     return (char >= "a" && char <= "z") || (char >= "A" && char <= "Z");
   }
 
-  // Función para comprobar si la cadena de carácteres recibida coincide con alguna palabra reservada del arreglo keywords
+  // Función para comprobar si la cadena de caracteres  recibida coincide con alguna palabra reservada del arreglo keywords
   function isKeyword(val) {
     if (keywords.indexOf(val) >= 0) {
       return val;
     }
   }
-  // Función para comprobar si la cadena de carácteres recibida coincide con alguna palabra reservada del arreglo special_symbols
+  // Función para comprobar si la cadena de caracteres  recibida coincide con alguna palabra reservada del arreglo special_symbols
   function isSpecialSymbol(val) {
     if (special_symbols.indexOf(val + c_next) >= 0) {
       return val + c_next;
@@ -262,7 +262,7 @@ function* scanner(input) {
       return val;
     }
   }
-  // Función para comprobar si la cadena de carácteres en curso es un comentario
+  // Función para comprobar si la cadena de caracteres  en curso es un comentario
   function isComment() {
     comment = "";
     let ite = 0;
