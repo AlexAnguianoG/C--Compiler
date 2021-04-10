@@ -1,0 +1,1 @@
+codigoNoValido ? 0
