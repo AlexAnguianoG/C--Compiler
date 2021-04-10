@@ -1,169 +1,3 @@
-/*
-
-TODO'''''''''''FALTA HACER'''''''''''
-- EXPLICAR FUNCIONES CON COMENTARIOS
-- Ignorar blanks, new lines, tabs ---IGNORADOS?---
-- Value para simbolos ---PONER NOMBRE---
-- Ignorar contenido de comentarios ---IGNORADOS? 
-- No comentarios dentro de id (tokens)
-- Whitespace, id, num y keywords son delimitadores.
-- PONER TOKENS EN TABLAS
-- Dar id a tokens o lo que sea que sea
-- Errores generados
-  - Comment not closed
-  - archivo vacio?
-  - Comentario dentro de token
-  - Simbolos invalidos
-
-
-TODO'''''''''''ANOTACIONES'''''''''''
-ELSE es id
-else es keyword
-
-Whitespace son blanks, new lines, tabs
-
-Whitespace, id, num y keywords son delimitadores.
-
-La tabla de símbolos incluye id's y números (No keywords ni simbolos especiales)
-La tabla de tokens incluye símbolos especiales 
-
-Cada símbolo especial y keyword debe tener un Token-ID único
-
-
-TODO'''''''''''''REPORTE'''''''''''''
-
-IEEE-830
-Page numbers
-Sections and subsetions
-Titulos en tablas, imagenes
-
-
-1. Intro
-//   1.1 Summary
-//     Descripcion del proyecto
-//   1.2 Notation
-//     Descripcion de
-//       - Maquinas finitas de estados
-//       - Regular expressions
-//       - Tablas de transición
-//     Porque del modelo para el desarrolo de analisis y diseño
-//     Justificacion del lenguaje usado
-
-2. Analisis
-  Describir funcionalidades del diseño del sistema
-  WHAT NOT THE HOWS
-    I/O data
-    Funciones que debe llevar a cabo
-    Comportamientos del sistema
-    Reinputicciones del sistema
-    Interfaces definidas
-  //WHAT THE COSTUMER REQUIRES
-  BASIS FOR THE CREATION OF THE SOFTWARE
-
-  Requirimientos para
-    // Automata del lenguaje
-    //   - El automata deberá reconocer las palabras reservadas de else, if, int, return, void, while, input y output.
-    //   - El automata deberá reconocer los simbolos especiales "+", "-", "*", "/", "<", "<=", ">", ">=", "==", "!=", "=", ";", ",", "(", ")", "[", "]", "{", "}", "/*" y "*".
-    //   - El automata deberá reconocer identificadores, estos conformados con letras mayusculas y minisculas.
-    //   - El automata deberá reconocer numeros naturales.
-    //   - El automata deberá reconocer e ignorar lineas nuevas, espacios en blanco y tabuladores.
-    //   - El automata deberá reconocer comentarios en cualquier espacio en blanco del codigo, sin incluir dentro de tokens.
-    Sistema
-      - El usuario deberá proporcionar un codigo fuente del leguaje C--.
-      - El sistema deberá reconocer las palabras reservadas de else, if, int, return, void, while, input y output.
-      - El sistema deberá reconocer los simbolos especiales "+", "-", "*", "/", "<", "<=", ">", ">=", "==", "!=", "=", ";", ",", "(", ")", "[", "]", "{", "}", "/*" y "*".
-      - El sistema deberá reconocer identificadores, estos conformados con letras mayusculas y minisculas.
-      - El sistema deberá reconocer numeros naturales.
-      - El sistema deberá reconocer e ignorar lineas nuevas, espacios en blanco y tabuladores.
-      - El sistema deberá reconocer comentarios en cualquier espacio en blanco del codigo, sin incluir dentro de tokens.
-      - El sistema deberá reconocer comentarios con multiples lineas de codigo.
-      - El sistema deberá finalizar el programa al llegar al final del codigo examinado.
-      - El sistema deberá detectar y desplegar errores cuando exista un token invalido.
-      - El sistema deberá generar las tablas de tokens y de simbolos.
-      - El sistema, al finalizar sin ningun error detectado, deberá desplegar las tablas de tokens y de simbolos.
-    // Tabla de trancisiones
-    Symbol table management
-      Description of tables used.
-      Method used to handle the tables.
-  
-  
-  Requirimientos funcionaes para cada 5 entregables
-    Pasos para completar cada uno
-      Que se necesita hacer
-      Por que
-  
-  Descripción y justificación de tokens e identificación
-  Descripción y justificación de errores
-
-3. Diseño
-  Guide of how to develop the code
-  Requirements transformados en como se implementará
-  Como el sistema esta subdividido en susbsistemas
-  Diagramas
-    State diagram
-    Flow diagram
-    Module diagram
-  Description of
-    Algorithms
-    Data inputucture required
-  Pseudo code
-
-4. Implementación
-  Source code
-
-5. Verificación y Validación
-  VERIFICACION - el producto esta bien
-    Chequeo de requirimientos funcionales y no funcionales
-  VALIDACIÓN - es el producto planeado
-
-  Software Test Cases design - Test model
-    Test cases de los HOW del diseño (Flow diagram)
-      Varios inputs para ejecutar función
-      Documentar lo que dió
-      Checar lo esperado con lo que dió
-  
-  
-
-6. Referencias
-  Chicago Manual Style
-  
-  R. Castelló, Class Lecture, Topic: “Chapter 2 – Lexical Analysis.” TC3048, School of Engineering and Science, ITESM, Chihuahua, Chih, April, 2020. 
-
-
-  
-
-
-
-
-
-
-
-Symbol Table Management en parte de diseño
-Especificar einputuctura de dato para lista de tokens y tabla de simbolos
-y algoritmos para buscar y agregar
-
-Work plan al final del reporte
-
-- Describir funcionalidad de archivos del sourcecode
-- Relacionar requirimientos con partes del codigo
-- Relacionar diseño con codigo
-
-
-TODO'''''''''''DELIVERABLES'''''''''''
-Automata del lenguaje
-Tokens y su identificacion
-Tabla de transicion
-Symbol Table Management
-  Description of tables used.
-  Method used to handle the tables.
-Error messages generated by scanner
-
-
-
-
-
-*/
-
 //Función principal del escáner
 function* scanner(input) {
   // Arreglo con palabras reservadas validas
@@ -469,14 +303,14 @@ const fileName = "./test/test.txt";
 let fs = require("fs");
 
 // Lectura de archivo, se almacena la cadena input
-const input = fs.readFileSync(fileName, "utf8");
+const charStr = fs.readFileSync(fileName, "utf8");
 
 // Desplegar nombre de archivo a escanear
 console.log("\nArchivo en revisión: " + fileName + "\n");
 
 // Despliegue de tokens
 console.log("Tabla de tokens");
-for (const token of scanner(input)) {
+for (const token of scanner(charStr)) {
   console.log(token);
 }
 
