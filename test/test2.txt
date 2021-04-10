@@ -1,2 +1,11 @@
-if else int while input output void return
-+ - * / < > <= >= == != = ;
+if
+else
+int
+while
+input
+output
+void
+return
++ - * / < <= > >= ==
+!= = ; , ( ) [ ] { }
+/**/
