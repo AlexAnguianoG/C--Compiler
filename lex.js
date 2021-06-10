@@ -124,7 +124,7 @@ function* scanner(input) {
         back();
       }
       // Desplegar error por no haber encontrado la finalización del comentario con "*/"
-      throw "Syntax Error: Comment not closed";
+      throw "Parser Error: Comment not closed";
     } else {
       return null;
     }
@@ -143,8 +143,9 @@ function* scanner(input) {
     if (value.length >= 1) {
       entryId++;
       return {
-        Id: entryId,
-        Value: Number(value),
+        // Id: entryId,
+        TokenID: "Number",
+        Contents: Number(value),
       };
     } else {
       //En caso de no encontrar un numero, regresar null
@@ -160,15 +161,20 @@ function* scanner(input) {
       value = value + c;
       next();
       if (isKeyword(value)) {
-        break;
+        return {
+          // Id: entryId,
+          // Value: value,
+          TokenID: value
+        };
       }
     }
     // En caso de encontrar una palabra reservada, regresarlo para el almacenamiento del token
     if (value.length >= 1) {
       entryId++;
       return {
-        Id: entryId,
-        Value: value,
+        // Id: entryId,
+        TokenID: "ID",
+        Contents: value
       };
     } else {
       //En caso de no encontrar una palabra reservada, regresar null
@@ -200,8 +206,9 @@ function* scanner(input) {
     if (val.length >= 1) {
       entryId++;
       return {
-        Id: entryId,
-        Value: val,
+        // Id: entryId,
+        // Value: val,
+        TokenID: val
       };
     } else {
       //En caso de no encontrar un símbolo especial, regresar null
@@ -297,7 +304,7 @@ console.log(`----------------
 ----------------`);
 
 // Archivo a escanear
-const fileName = "./test/test.txt";
+const fileName = "./test/test7.txt";
 
 // Import para leer archivos
 let fs = require("fs");
@@ -308,11 +315,53 @@ const charStr = fs.readFileSync(fileName, "utf8");
 // Desplegar nombre de archivo a escanear
 console.log("\nArchivo en revisión: " + fileName + "\n");
 
-// Despliegue de tokens
-console.log("Tabla de tokens");
+// Definición de tablas
+let idTable = [];
+let idTableEntry = 0;
+
+let numberTable = [];
+let numberTableEntry = 0;
+
+let output = [];
+
+// Asignación de tokens a tablas
 for (const token of scanner(charStr)) {
-  console.log(token);
+  if(token.TokenID == "ID"){
+    if(!idTable.some(e => e.Contents === token.Contents)){
+      idTableEntry++;
+      idTable.push({Entry: idTableEntry, Contents: token.Contents})
+      output.push([token.TokenID,idTableEntry])
+    } else {
+      output.push([token.TokenID, idTable.filter(e => e.Contents === token.Contents)[0].Entry])
+    }
+
+  } else if(token.TokenID == "Number"){
+    numberTableEntry++
+    numberTable.push({Entry: numberTableEntry, Contents: token.Contents})
+    output.push([token.TokenID,numberTableEntry])
+  } else {
+    output.push([token.TokenID])
+  }
+
 }
+
+//Despliegue de tabla de IDs
+console.log(`----------------
+| Symbol Table for IDs |
+----------------`);
+console.log(idTable);
+
+//Despliegue de tabla de números
+console.log(`----------------
+| Symbol Table for #s |
+----------------`);
+console.log(numberTable);
+
+//Despliegue del output
+console.log(`----------------
+| Scanner output |
+----------------`);
+console.log(output)
 
 console.log(`----------------
 | End of scanner |
