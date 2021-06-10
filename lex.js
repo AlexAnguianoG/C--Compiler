@@ -124,7 +124,7 @@ function* scanner(input) {
         back();
       }
       // Desplegar error por no haber encontrado la finalización del comentario con "*/"
-      throw "Comment not closed";
+      throw "Syntax Error: Comment not closed";
     } else {
       return null;
     }
@@ -287,7 +287,7 @@ function* scanner(input) {
       yield valid_Token;
     } else {
       // En caso de encontrar un carácter no válido desplegar error, con la posición de este en el archivo
-      throw `unexpected char: "${c}" at LINE:${line} COLUMN:${col}`;
+      throw `Syntax Error: unexpected char: "${c}" at LINE:${line} COLUMN:${col}`;
     }
   }
 }
