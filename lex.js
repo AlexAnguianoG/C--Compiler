@@ -349,19 +349,19 @@ for (const token of scanner(charStr)) {
 console.log(`----------------
 | Symbol Table for IDs |
 ----------------`);
-console.log(idTable);
+idTable.forEach(e=> console.log(e))
 
 //Despliegue de tabla de números
 console.log(`----------------
 | Symbol Table for #s |
 ----------------`);
-console.log(numberTable);
+numberTable.forEach(e=> console.log(e))
 
 //Despliegue del output
 console.log(`----------------
 | Scanner output |
 ----------------`);
-console.log(output)
+output.forEach(e=> console.log(e))
 
 console.log(`----------------
 | End of scanner |
