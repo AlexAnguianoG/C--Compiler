@@ -2,10 +2,11 @@
   "name": "compiler",
   "version": "1.0.0",
   "description": "Compiler software",
-  "main": "lex.js",
+  "main": "main.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "nodemon": "nodemon lex.js"
+    "nodemon": "nodemon main.js"
   },
   "repository": {
     "type": "git",

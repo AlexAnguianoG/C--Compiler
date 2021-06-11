@@ -1,5 +1,8 @@
+// Import para leer archivos
+import { readFileSync } from "fs";
+
 //Función principal del escáner
-function* scanner(input) {
+function* scan(input) {
   // Arreglo con palabras reservadas validas
   let keywords = [
     "else",
@@ -124,7 +127,7 @@ function* scanner(input) {
         back();
       }
       // Desplegar error por no haber encontrado la finalización del comentario con "*/"
-      throw "Parser Error: Comment not closed";
+      throw new Error(`Error Sintáctico: Símbolo inesperado: "${c}" en linea:${line} columna:${col}, se esperaba cierre de comentario '*/'  \n\n`);
     } else {
       return null;
     }
@@ -294,75 +297,77 @@ function* scanner(input) {
       yield valid_Token;
     } else {
       // En caso de encontrar un carácter no válido desplegar error, con la posición de este en el archivo
-      throw `Syntax Error: unexpected char: "${c}" at LINE:${line} COLUMN:${col}`;
+      throw new Error(`Error Sintáctico: Símbolo inesperado: "${c}" en linea:${line} columna:${col}  \n\n`);
     }
   }
 }
 
-console.log(`----------------
-|Start of scanner|
-----------------`);
+export function scanner(){
+  console.log(`\n\n---------------------
+| Inicio de Scanner |
+---------------------`);
 
-// Archivo a escanear
-const fileName = "./test/test7.txt";
+  // Archivo a escanear
+  const fileName = "./test/test7.txt";
 
-// Import para leer archivos
-let fs = require("fs");
 
-// Lectura de archivo, se almacena la cadena input
-const charStr = fs.readFileSync(fileName, "utf8");
 
-// Desplegar nombre de archivo a escanear
-console.log("\nArchivo en revisión: " + fileName + "\n");
+  // Lectura de archivo, se almacena la cadena input
+  const charStr = String(readFileSync(fileName))
 
-// Definición de tablas
-let idTable = [];
-let idTableEntry = 0;
+  // Desplegar nombre de archivo a escanear
+  console.log("\nArchivo en revisión: " + fileName + "\n");
 
-let numberTable = [];
-let numberTableEntry = 0;
+  // Definición de tablas
+  let idTable = [];
+  let idTableEntry = 0;
 
-let output = [];
+  let numberTable = [];
+  let numberTableEntry = 0;
 
-// Asignación de tokens a tablas
-for (const token of scanner(charStr)) {
-  if(token.TokenID == "ID"){
-    if(!idTable.some(e => e.Contents === token.Contents)){
-      idTableEntry++;
-      idTable.push({Entry: idTableEntry, Contents: token.Contents})
-      output.push([token.TokenID,idTableEntry])
+  let output = [];
+
+  // Asignación de tokens a tablas
+  for (const token of scan(charStr)) {
+    if(token.TokenID == "ID"){
+      if(!idTable.some(e => e.Contents === token.Contents)){
+        idTableEntry++;
+        idTable.push({Entry: idTableEntry, Contents: token.Contents})
+        output.push([token.TokenID,idTableEntry])
+      } else {
+        output.push([token.TokenID, idTable.filter(e => e.Contents === token.Contents)[0].Entry])
+      }
+
+    } else if(token.TokenID == "Number"){
+      numberTableEntry++
+      numberTable.push({Entry: numberTableEntry, Contents: token.Contents})
+      output.push([token.TokenID,numberTableEntry])
     } else {
-      output.push([token.TokenID, idTable.filter(e => e.Contents === token.Contents)[0].Entry])
+      output.push([token.TokenID])
     }
 
-  } else if(token.TokenID == "Number"){
-    numberTableEntry++
-    numberTable.push({Entry: numberTableEntry, Contents: token.Contents})
-    output.push([token.TokenID,numberTableEntry])
-  } else {
-    output.push([token.TokenID])
   }
 
-}
+  //Despliegue de tabla de IDs
+  console.log(`------------------------------
+| Tabla de Símbolos para IDs |
+------------------------------`);
+  idTable.forEach(e=> console.log(e))
 
-//Despliegue de tabla de IDs
-console.log(`----------------
-| Symbol Table for IDs |
-----------------`);
-idTable.forEach(e=> console.log(e))
+  //Despliegue de tabla de números
+  console.log(`----------------------------------
+| Tabla de Símbolos para Números |
+----------------------------------`);
+  numberTable.forEach(e=> console.log(e))
 
-//Despliegue de tabla de números
-console.log(`----------------
-| Symbol Table for #s |
-----------------`);
-numberTable.forEach(e=> console.log(e))
-
-//Despliegue del output
-console.log(`----------------
+  //Despliegue del output
+  console.log(`------------------
 | Scanner output |
-----------------`);
-output.forEach(e=> console.log(e))
+------------------`);
+  output.forEach(e=> console.log(e))
 
-console.log(`----------------
-| End of scanner |
-----------------`);
+  console.log(`------------------
+| Fin de scanner |
+------------------\n\n`);
+  return(output)
+}
