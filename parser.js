@@ -10,7 +10,7 @@ let isError = false;
 //     Match('+');
 //     A();
 //   } else {
-//     ThrowError("Simbolo inesperado, se esperaba 'a'");
+//     ThrowError("Símbolo inesperado, se esperaba 'a'");
 //   }
 // }
 
@@ -22,7 +22,7 @@ let isError = false;
 //   } else if(current_token == 'a') {
 //     Match('a');
 //   } else {
-//     ThrowError("Simbolo inesperado, se esperaba '(' ó 'a' ");
+//     ThrowError("Símbolo inesperado, se esperaba '(' ó 'a' ");
 //   }
 // }
 
@@ -35,11 +35,11 @@ function Get_Next_Token() {
 }
 
 function Match(terminalToken) {
-  console.log(current_token)
+  console.log(current_token + "  " + tokenList[tokenIndex][1])
   if(current_token == terminalToken) {
     current_token = Get_Next_Token()
   } else {
-    ThrowError(`Match incorrecto, se esperaba ${terminalToken} en lugar de ${current_token}`);
+    ThrowError(`Match incorrecto, se esperaba '${terminalToken}' en lugar de ${current_token}`);
   }
 }
 
@@ -51,27 +51,40 @@ function ThrowError(msg) {
 
 
 function program() {
-  declaration_list()
+  if(current_token == 'void' || current_token == 'int' ){
+    declaration_list();
+  } else {
+    ThrowError("Símbolo inesperado, se esperaba inicio del programa con 'void' ó 'int'")
+  }
 }
 
 function declaration_list(){
-  declaration();
-  declaration_listPrime();
+  if(current_token == 'void' || current_token == 'int' ){
+    declaration();
+    declaration_listPrime();
+  }
+  //return
 }
 
 function declaration_listPrime(){
-  declaration();
-  if (current_token == '$') {
+  if(current_token == 'void' || current_token == 'int' ){
+    declaration();
+  } else if (current_token == '$') {
     return;
   } else {
-    ThrowError("Simbolo inesperado, se esperaba fin de declaración");
+    ThrowError("Símbolo inesperado, se esperaba fin de declaración");
   }
 }
 
 function declaration(){
-  var_declaration();
-  fun_declaration();
-  // else ?
+    if(current_token == 'int'){
+      var_declaration();
+    }
+    if(current_token == 'void' || current_token == 'int' ){
+      fun_declaration();
+    } 
+    
+  // else epsilon?
 }
 
 function var_declaration(){
@@ -83,10 +96,9 @@ function var_declaration(){
       Match('Number');
       Match(']');
     }
-    console.log("dsad")
     Match(';');
   } else {
-    ThrowError("Simbolo inesperado, se esperaba 'int");
+    ThrowError("Símbolo inesperado, se esperaba 'int");
   }
 }
 
@@ -96,45 +108,53 @@ function type_specifier(){
   } else if(current_token == 'void') {
     Match('void');
   } else {
-    ThrowError("Simbolo inesperado, se esperaba 'int' ó 'void'");
+    ThrowError("Símbolo inesperado, se esperaba 'int' ó 'void'");
   }
 }
 
 function fun_declaration(){
-  type_specifier();
-  if(current_token == 'ID') {
-    Match('ID');
-    Match('(')
-    params();
-    compound_stmt();
+  if(current_token == 'void' || current_token == 'int' ){
+    type_specifier();
+    if(current_token == 'ID') {
+      Match('ID');
+      Match('(')
+      params();
+      Match(')')
+      compound_stmt();
+    }
   } else {
-    ThrowError("Simbolo inesperado, se esperaba 'ID'");
+    ThrowError("Símbolo inesperado, se esperaba 'ID'");
   }
 }
 
 function params(){
-  param_list();
-  // if (current_token == '$') {
-  //   return;
-  // } else {
-  //   ThrowError("Simbolo inesperado, se esperaba fin de declaración");
-  // }
+  if (current_token == 'int') {
+    param_list();
+  } else if(current_token == 'void' ){
+    Match('void');
+  } else if (current_token == '$'|| current_token == ')') {
+    return;
+  } else {
+    ThrowError("Símbolo inesperado, se esperaba fin de declaración");
+  }
 }
 
 function param_list(){
-  param();
-  param_listPrime();
+  if (current_token == 'int') {
+    param();
+    param_listPrime();
+  }
 }
 
 function param_listPrime(){
   if(current_token == ',') {
     Match(',');
-    term();
-    expPrime();
+    param();
+    param_listPrime();
   } else if(current_token == ')') {
     return;
   } else {
-    ThrowError("Simbolo inesperado, se esperaba ',' ó ')'");
+    ThrowError("Símbolo inesperado, se esperaba ',' ó ')'");
   }
 }
 
@@ -147,7 +167,7 @@ function param(){
       Match(']');
     }
   } else {
-    ThrowError("Simbolo inesperado, se esperaba 'int");
+    ThrowError("Símbolo inesperado, se esperaba 'int'");
   }
 }
 
@@ -155,9 +175,10 @@ function compound_stmt(){
   if(current_token == '{') {
     Match('{');
     local_declarations();
+    statement_list();
     Match('}');
   } else {
-    ThrowError("Simbolo inesperado, se esperaba '{");
+    ThrowError("Símbolo inesperado, se esperaba '{");
   }
 }
 
@@ -166,63 +187,70 @@ function local_declarations(){
 }
 
 function local_declarationsPrime(){
-  var_declaration();
-  local_declarationsPrime();
-  //cambiar posiciones ^ 
-  // Agregar $
-  if(current_token == 'ID' || current_token == '{' || current_token == '}' || current_token == 'if' || current_token == 'while' || current_token == 'return' || current_token == 'input' || current_token == 'output') {
+  if (current_token == 'int') {
+    var_declaration();
+    local_declarationsPrime();
+  } else if(current_token == 'ID' || current_token == '{' || current_token == '}' || current_token == 'if' || current_token == 'while' || current_token == 'return' || current_token == 'input' || current_token == 'output') {
     return;
   } else {
-    ThrowError("Simbolo inesperado, se esperaba 'ID', '{', '}', 'if', 'while', 'return', 'input' ó 'output'");
+    ThrowError("Símbolo inesperado, se esperaba 'ID', '{', '}', 'if', 'while', 'return', 'input' ó 'output'");
   }
 }
 
 function statement_list(){
-  statement_listPrime();
+  if(current_token == 'ID' || current_token == '{' || current_token == '}' || current_token == 'if' || current_token == 'while' || current_token == 'return' || current_token == 'input' || current_token == 'output') {
+    statement_listPrime();
+  }
 }
 function statement_listPrime(){
-  statement();
-  statement_listPrime(); 
-  //cambiar posiciones ^ 
-  // Agregar $
-  if(current_token == '}') {
+  if(current_token == 'ID' || current_token == '{' || current_token == 'if' || current_token == 'while' || current_token == 'return' || current_token == 'input' || current_token == 'output') {
+    statement();
+    statement_listPrime(); 
+  } else if(current_token == '}') {
     return;
   } else {
-    ThrowError("Simbolo inesperado, se esperaba 'ID', '{', '}', 'if', 'while', 'return', 'input' ó 'output'");
+    ThrowError("Símbolo inesperado, se esperaba '}'");
+    // ThrowError("Símbolo inesperado, se esperaba 'ID', '{', '}', 'if', 'while', 'return', 'input' ó 'output'");
   } 
 }
 
 function statement(){
-  assignment_stmt();
-  call_stmt();
-  compound_stmt();
-  selection_stmt();
-  iteration_stmt();
-  return_stmt();
-  input_stmt();
-  output_stmt();
+  if(current_token == 'ID'){
+    assignment_stmt();
+  } else if(current_token == 'ID'){
+    call_stmt();
+  } else if(current_token == '{'){
+    compound_stmt();
+  } else if(current_token == 'if'){
+    selection_stmt();
+  } else if(current_token == 'while'){
+    iteration_stmt();
+  } else if(current_token == 'return'){
+    return_stmt();
+  } else if(current_token == 'input'){
+    input_stmt();
+  } else if(current_token == 'output'){
+    output_stmt();
+  } 
+  //Intercambio assignment y call 
 }
 
 
 
 function assignment_stmt(){
-  variable();
-  if(current_token == '='){
+  if(current_token == 'ID'){
+    variable();
     Match('=');
     expression();
     Match(';');
-  } else {
-    ThrowError("Simbolo inesperado, se esperaba '='");
-  } 
+  }
 }
 
 function call_stmt(){
-  call();
-  // if(current_token == ';'){
+  if(current_token == 'ID'){
+    call();
     Match(';');
-  // } else {
-  //   ThrowError("Simbolo inesperado, se esperaba '='");
-  // } 
+  }
 }
 
 function selection_stmt(){
@@ -237,7 +265,7 @@ function selection_stmt(){
       statement();
     }
   } else {
-    ThrowError("Simbolo inesperado, se esperaba 'if");
+    ThrowError("Símbolo inesperado, se esperaba 'if");
   }
 }
 
@@ -249,18 +277,22 @@ function iteration_stmt(){
     Match(')');
     statement();
   } else {
-    ThrowError("Simbolo inesperado, se esperaba 'while");
+    ThrowError("Símbolo inesperado, se esperaba 'while");
   }
 }
 
 function return_stmt(){
   if(current_token == 'return') {
     Match('return');
-    //or void
-    expression();
-    Match(';');
+    if(current_token == ';'){
+      Match(';');
+      //O poner expression al principio
+    } else {
+      expression();
+      Match(';');
+    }
   } else {
-    ThrowError("Simbolo inesperado, se esperaba 'return");
+    ThrowError("Símbolo inesperado, se esperaba 'return");
   }
 }
 
@@ -270,7 +302,7 @@ function input_stmt(){
     variable();
     Match(';');
   } else {
-    ThrowError("Simbolo inesperado, se esperaba 'input");
+    ThrowError("Símbolo inesperado, se esperaba 'input");
   }
 }
 
@@ -280,7 +312,7 @@ function output_stmt(){
     expression();
     Match(';');
   } else {
-    ThrowError("Simbolo inesperado, se esperaba 'output");
+    ThrowError("Símbolo inesperado, se esperaba 'output");
   }
 }
 
@@ -292,16 +324,22 @@ function variable(){
       arithmetic_expression();
       Match(']');
     }
-  } else {
-    ThrowError("Simbolo inesperado, se esperaba 'ID");
-  }
+  } 
+  // else {
+  //   ThrowError("Símbolo inesperado, se esperaba 'ID'");
+  // }
 }
 
 function expression(){
-  arithmetic_expression();
-  //optional
-  relop();
-  arithmetic_expression();
+  
+  if(current_token == 'ID' || current_token == 'Number' || current_token == '('){
+    arithmetic_expression();
+    relop();
+    //
+    arithmetic_expression();
+  }
+  // Otro?
+  // arithmetic_expression();
 }
 
 
@@ -318,15 +356,17 @@ function relop(){
     Match('==');
   } else if(current_token == '!='){
     Match('!=');
-  } else {
-    ThrowError("Simbolo inesperado, se esperaba '<', '<', '>', '>=', '==' ó '!='");
-  }
+  } 
+  // else {
+  //   ThrowError("Símbolo inesperado, se esperaba '<', '<', '>', '>=', '==' ó '!='");
+  // }
 }
 
 function arithmetic_expression(){
-  term();
-  arithmetic_expressionPrime();
-
+  if(current_token == 'ID' || current_token == 'Number' || current_token == '('){
+    term();
+    arithmetic_expressionPrime();
+  }
 }
 
 
@@ -342,13 +382,15 @@ function arithmetic_expressionPrime(){
   } else if(current_token == ',' || current_token == ';' || current_token == ']' || current_token == ')' || current_token == '<=' || current_token == '<' || current_token == '>' || current_token == '>=' || current_token == '==' || current_token == '!=') {
     return;
   } else {
-    ThrowError("Simbolo inesperado, se esperaba '+', '-', ',', ';', ']', ')', '<=', '<', '>', '>=', '==' ó '!='");
+    ThrowError("Símbolo inesperado, se esperaba '+', '-', ',', ';', ']', ')', '<=', '<', '>', '>=', '==' ó '!='");
   }
 }
 
 function term(){
-  factor();
-  termPrime();
+  if(current_token == 'ID' || current_token == 'Number' || current_token == '('){
+    factor();
+    termPrime();
+  }
 }
 
 function termPrime(){
@@ -363,22 +405,23 @@ function termPrime(){
   } else if(current_token == ',' || current_token == ';' || current_token == ']' || current_token == ')' || current_token == '<=' || current_token == '<' || current_token == '>' || current_token == '>=' || current_token == '==' || current_token == '!=' || current_token == '+' || current_token == '-') {
     return;
   } else {
-    ThrowError("Simbolo inesperado, se esperaba '*', '/', ',', ';', ']', ')', '<=', '<', '>', '>=', '==','!=', '+' ó '-'");
+    ThrowError("Símbolo inesperado, se esperaba '*', '/', ',', ';', ']', ')', '<=', '<', '>', '>=', '==','!=', '+' ó '-'");
   }
 }
 
 function factor(){
-  //else ?
-  variable();
-  call();
-  if(current_token == '(') {
+  if(current_token == 'ID'){
+    variable();
+    call();
+    //problem
+  } else if(current_token == '(') {
     Match('(');
     arithmetic_expression();
     Match(')');
   } else if(current_token == 'Number') {
     Match('Number');
   } else {
-    ThrowError("Simbolo inesperado, se esperaba apertura de paréntesis '(' ó un número");
+    ThrowError("Símbolo inesperado, se esperaba apertura de paréntesis '(' ó un número");
   }
 }
 
@@ -389,19 +432,29 @@ function call(){
     Match('(');
     args();
     Match(')');
-  } else {
-    ThrowError("Simbolo inesperado, se esperaba 'ID'");
-  }
+  } 
+  // else {
+  //   ThrowError("Símbolo inesperado, se esperaba 'ID'");
+  // }
 }
 
 function args(){
-  args_list();
+  if(current_token == 'ID' || current_token == 'Number' || current_token == '('){
+    args_list();
+  }
+  // else if(current_token == ')') {
+  //   return;
+  // } else {
+  //   ThrowError("Símbolo inesperado, se esperaba ')'");
+  // }
 }
 
 
 function args_list(){
-  arithmetic_expression()
-  args_listPrime();
+  if(current_token == 'ID' || current_token == 'Number' || current_token == '('){
+    arithmetic_expression()
+    args_listPrime();
+  }
 }
 
 function args_listPrime(){
@@ -412,7 +465,7 @@ function args_listPrime(){
   } else if(current_token == ')') {
     return;
   } else {
-    ThrowError("Simbolo inesperado, se esperaba ','");
+    ThrowError("Símbolo inesperado, se esperaba ','");
   }
 }
 
@@ -440,7 +493,7 @@ function args_listPrime(){
 //   } else if(current_token == '$' || current_token == ')') {
 //     return;
 //   } else {
-//     ThrowError("Simbolo inesperado, se esperaba '+' ó '-'");
+//     ThrowError("Símbolo inesperado, se esperaba '+' ó '-'");
 //   }
 // }
 
@@ -461,7 +514,7 @@ function args_listPrime(){
 //   } else if(current_token == '$' || current_token == ')' || current_token == '+' || current_token == '-') {
 //     return;
 //   } else {
-//     ThrowError("Simbolo inesperado, se esperaba '*' ó '/'");
+//     ThrowError("Símbolo inesperado, se esperaba '*' ó '/'");
 //   }
 // }
 
@@ -473,7 +526,7 @@ function args_listPrime(){
 //   } else if(current_token == 'Number') {
 //     Match('Number');
 //   } else {
-//     ThrowError("Simbolo inesperado, se esperaba apertura de paréntesis '(' ó un número");
+//     ThrowError("Símbolo inesperado, se esperaba apertura de paréntesis '(' ó un número");
 //   }
 // }
 
@@ -496,7 +549,7 @@ export function parser(input) {
 
   tokenList = input;
 
-  // Se añade simbolo $ al final de lista de tokens
+  // Se añade Símbolo $ al final de lista de tokens
   tokenList.push(['$'])
   console.log(tokenList)
   current_token = Get_Next_Token();
