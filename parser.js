@@ -1,33 +1,6 @@
 let tokenList;
 let tokenIndex = -1;
 let current_token;
-let isError = false;
-
-
-// function S() {
-//   if(current_token == 'a') {
-//     Match('a');
-//     Match('+');
-//     A();
-//   } else {
-//     ThrowError("Símbolo inesperado, se esperaba 'a'");
-//   }
-// }
-
-// function A() {
-//   if(current_token == '(') {
-//     Match('(');
-//     S();
-//     Match(')');
-//   } else if(current_token == 'a') {
-//     Match('a');
-//   } else {
-//     ThrowError("Símbolo inesperado, se esperaba '(' ó 'a' ");
-//   }
-// }
-
-
-
 
 function Get_Next_Token() {
   tokenIndex++;
@@ -35,7 +8,7 @@ function Get_Next_Token() {
 }
 
 function Match(terminalToken) {
-  console.log(current_token + "  " + tokenList[tokenIndex][1])
+  console.log(current_token)
   if(current_token == terminalToken) {
     current_token = Get_Next_Token()
   } else {
@@ -44,17 +17,14 @@ function Match(terminalToken) {
 }
 
 function ThrowError(msg) {
-  // console.log( tokenIndex +" aqui " + current_token)
-  throw new Error(`Error Sintáctico: ${msg}, en la posición (${tokenIndex+1}) de la lista de tokens.\n\n\n`);
-  //Agregar linea de codigo
+  throw new Error(`Error Sintáctico: ${msg}, en la posicion (${tokenIndex+1}) de la lista de tokens.\n\n\n`);
 }
-
 
 function program() {
   if(current_token == 'void' || current_token == 'int' ){
     declaration_list();
   } else {
-    ThrowError("Símbolo inesperado, se esperaba inicio del programa con 'void' ó 'int'")
+    ThrowError("Símbolo inesperado, se esperaba inicio del programa con 'void' o 'int'")
   }
 }
 
@@ -63,7 +33,6 @@ function declaration_list(){
     declaration();
     declaration_listPrime();
   }
-  //return
 }
 
 function declaration_listPrime(){
@@ -83,8 +52,6 @@ function declaration(){
     if(current_token == 'void' || current_token == 'int' ){
       fun_declaration();
     } 
-    
-  // else epsilon?
 }
 
 function var_declaration(){
@@ -108,7 +75,7 @@ function type_specifier(){
   } else if(current_token == 'void') {
     Match('void');
   } else {
-    ThrowError("Símbolo inesperado, se esperaba 'int' ó 'void'");
+    ThrowError("Símbolo inesperado, se esperaba 'int' o 'void'");
   }
 }
 
@@ -154,7 +121,7 @@ function param_listPrime(){
   } else if(current_token == ')') {
     return;
   } else {
-    ThrowError("Símbolo inesperado, se esperaba ',' ó ')'");
+    ThrowError("Símbolo inesperado, se esperaba ',' o ')'");
   }
 }
 
@@ -193,7 +160,7 @@ function local_declarationsPrime(){
   } else if(current_token == 'ID' || current_token == '{' || current_token == '}' || current_token == 'if' || current_token == 'while' || current_token == 'return' || current_token == 'input' || current_token == 'output') {
     return;
   } else {
-    ThrowError("Símbolo inesperado, se esperaba 'ID', '{', '}', 'if', 'while', 'return', 'input' ó 'output'");
+    ThrowError("Símbolo inesperado, se esperaba 'ID', '{', '}', 'if', 'while', 'return', 'input' o 'output'");
   }
 }
 
@@ -210,7 +177,6 @@ function statement_listPrime(){
     return;
   } else {
     ThrowError("Símbolo inesperado, se esperaba '}'");
-    // ThrowError("Símbolo inesperado, se esperaba 'ID', '{', '}', 'if', 'while', 'return', 'input' ó 'output'");
   } 
 }
 
@@ -232,10 +198,7 @@ function statement(){
   } else if(current_token == 'output'){
     output_stmt();
   } 
-  //Intercambio assignment y call 
 }
-
-
 
 function assignment_stmt(){
   if(current_token == 'ID'){
@@ -286,7 +249,6 @@ function return_stmt(){
     Match('return');
     if(current_token == ';'){
       Match(';');
-      //O poner expression al principio
     } else {
       expression();
       Match(';');
@@ -325,9 +287,6 @@ function variable(){
       Match(']');
     }
   } 
-  // else {
-  //   ThrowError("Símbolo inesperado, se esperaba 'ID'");
-  // }
 }
 
 function expression(){
@@ -338,8 +297,6 @@ function expression(){
     //
     arithmetic_expression();
   }
-  // Otro?
-  // arithmetic_expression();
 }
 
 
@@ -357,9 +314,6 @@ function relop(){
   } else if(current_token == '!='){
     Match('!=');
   } 
-  // else {
-  //   ThrowError("Símbolo inesperado, se esperaba '<', '<', '>', '>=', '==' ó '!='");
-  // }
 }
 
 function arithmetic_expression(){
@@ -382,7 +336,7 @@ function arithmetic_expressionPrime(){
   } else if(current_token == ',' || current_token == ';' || current_token == ']' || current_token == ')' || current_token == '<=' || current_token == '<' || current_token == '>' || current_token == '>=' || current_token == '==' || current_token == '!=') {
     return;
   } else {
-    ThrowError("Símbolo inesperado, se esperaba '+', '-', ',', ';', ']', ')', '<=', '<', '>', '>=', '==' ó '!='");
+    ThrowError("Símbolo inesperado, se esperaba '+', '-', ',', ';', ']', ')', '<=', '<', '>', '>=', '==' o '!='");
   }
 }
 
@@ -405,7 +359,7 @@ function termPrime(){
   } else if(current_token == ',' || current_token == ';' || current_token == ']' || current_token == ')' || current_token == '<=' || current_token == '<' || current_token == '>' || current_token == '>=' || current_token == '==' || current_token == '!=' || current_token == '+' || current_token == '-') {
     return;
   } else {
-    ThrowError("Símbolo inesperado, se esperaba '*', '/', ',', ';', ']', ')', '<=', '<', '>', '>=', '==','!=', '+' ó '-'");
+    ThrowError("Símbolo inesperado, se esperaba '*', '/', ',', ';', ']', ')', '<=', '<', '>', '>=', '==','!=', '+' o '-'");
   }
 }
 
@@ -413,7 +367,6 @@ function factor(){
   if(current_token == 'ID'){
     variable();
     call();
-    //problem
   } else if(current_token == '(') {
     Match('(');
     arithmetic_expression();
@@ -421,7 +374,7 @@ function factor(){
   } else if(current_token == 'Number') {
     Match('Number');
   } else {
-    ThrowError("Símbolo inesperado, se esperaba apertura de paréntesis '(' ó un número");
+    ThrowError("Símbolo inesperado, se esperaba apertura de paréntesis '(' o un número");
   }
 }
 
@@ -433,20 +386,12 @@ function call(){
     args();
     Match(')');
   } 
-  // else {
-  //   ThrowError("Símbolo inesperado, se esperaba 'ID'");
-  // }
 }
 
 function args(){
   if(current_token == 'ID' || current_token == 'Number' || current_token == '('){
     args_list();
   }
-  // else if(current_token == ')') {
-  //   return;
-  // } else {
-  //   ThrowError("Símbolo inesperado, se esperaba ')'");
-  // }
 }
 
 
@@ -470,67 +415,6 @@ function args_listPrime(){
 }
 
 
-
-
-
-
-
-// function exp() {
-//   term();
-//   expPrime();
-  
-// }
-
-// function expPrime() {
-//   if(current_token == '+') {
-//     Match('+');
-//     term();
-//     expPrime();
-//   } else if(current_token == '-') {
-//     Match('-');
-//     term();
-//     expPrime();
-//   } else if(current_token == '$' || current_token == ')') {
-//     return;
-//   } else {
-//     ThrowError("Símbolo inesperado, se esperaba '+' ó '-'");
-//   }
-// }
-
-// function term() {
-//   factor();
-//   termPrime();
-// }
-
-// function termPrime() {
-//   if(current_token == '*') {
-//     Match('*');
-//     factor();
-//     termPrime();
-//   } else if(current_token == '/') {
-//     Match('/');
-//     factor();
-//     termPrime();
-//   } else if(current_token == '$' || current_token == ')' || current_token == '+' || current_token == '-') {
-//     return;
-//   } else {
-//     ThrowError("Símbolo inesperado, se esperaba '*' ó '/'");
-//   }
-// }
-
-// function factor() {
-//   if(current_token == '(') {
-//     Match('(');
-//     exp();
-//     Match(')');
-//   } else if(current_token == 'Number') {
-//     Match('Number');
-//   } else {
-//     ThrowError("Símbolo inesperado, se esperaba apertura de paréntesis '(' ó un número");
-//   }
-// }
-
-
 //Función principal del parser
 export function parser(input) {
   console.log(`--------------------
@@ -539,19 +423,9 @@ export function parser(input) {
 
   let output = [];
 
-  // console.log("ID: ")
-  // input.forEach(e=> e[0] == "ID" && e[1] && console.log(e[1]))
-
-  // console.log("Numeros: ")
-  // input.forEach(e=> e[0] == "Number" && e[1] && console.log(e[1]))
-
-  
-
   tokenList = input;
 
-  // Se añade Símbolo $ al final de lista de tokens
   tokenList.push(['$'])
-  console.log(tokenList)
   current_token = Get_Next_Token();
 
   program();
